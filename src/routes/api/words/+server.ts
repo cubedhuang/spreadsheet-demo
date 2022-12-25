@@ -88,7 +88,7 @@ export const GET = (async ({ setHeaders }) => {
 	}
 
 	setHeaders({
-		'Cache-Control': 'max-age=300',
+		'Cache-Control': 'max-age=300, public',
 		'X-Times-Fetched': cache.timesFetched.toString()
 	});
 
