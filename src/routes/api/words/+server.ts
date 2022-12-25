@@ -1,7 +1,8 @@
-import { env } from '$env/dynamic/private';
-import type { Word } from '$lib/types';
 import { json } from '@sveltejs/kit';
 import { google } from 'googleapis';
+
+import { env } from '$env/dynamic/private';
+import type { Word } from '$lib/types';
 import type { RequestHandler } from './$types';
 
 interface RawWord {
@@ -69,8 +70,27 @@ function cleanUpRawWords(rawWords: RawWord[]) {
 	});
 }
 
-export const prerender = true;
+// only fetch from google sheets once every 5 minutes
 
-export const GET = (async () => {
-	return json(cleanUpRawWords(buildRawWordsFromRows(await fetchRows())));
+const cache = {
+	words: [] as Word[],
+	lastFetched: 0,
+	timesFetched: 0
+};
+
+export const GET = (async ({ setHeaders }) => {
+	const now = Date.now();
+
+	if (now - cache.lastFetched > 5 * 60 * 1000) {
+		cache.words = cleanUpRawWords(buildRawWordsFromRows(await fetchRows()));
+		cache.lastFetched = now;
+		cache.timesFetched++;
+	}
+
+	setHeaders({
+		'Cache-Control': 'max-age=300',
+		'X-Times-Fetched': cache.timesFetched.toString()
+	});
+
+	return json(cache.words);
 }) satisfies RequestHandler;
