@@ -70,7 +70,7 @@ function cleanUpRawWords(rawWords: RawWord[]) {
 	});
 }
 
-// only fetch from google sheets once every 5 minutes
+// only fetch from google sheets once every minutes
 
 const cache = {
 	words: [] as Word[],
@@ -81,14 +81,14 @@ const cache = {
 export const GET = (async ({ setHeaders }) => {
 	const now = Date.now();
 
-	if (now - cache.lastFetched > 5 * 60 * 1000) {
+	if (now - cache.lastFetched > 60 * 1000) {
 		cache.words = cleanUpRawWords(buildRawWordsFromRows(await fetchRows()));
 		cache.lastFetched = now;
 		cache.timesFetched++;
 	}
 
 	setHeaders({
-		'Cache-Control': 'max-age=300, public',
+		'Cache-Control': 'max-age=60, public',
 		'X-Times-Fetched': cache.timesFetched.toString()
 	});
 

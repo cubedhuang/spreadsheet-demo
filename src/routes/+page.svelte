@@ -89,7 +89,8 @@
 		<div
 			transition:fly={{ y: 24, duration: 300 }}
 			class="fixed p-4 bottom-0 left-0 right-0 border-t border-gray-200
-				sm:w-96 sm:left-auto sm:bottom-4 sm:right-4 sm:box shadow-lg"
+				sm:w-96 sm:left-auto sm:bottom-4 sm:right-4 sm:box shadow-lg
+				bg-white dark:bg-black dark:border-gray-800"
 		>
 			<h2 class="font-bold text-xl">{selectedWord.lexeme}</h2>
 			<p class="faded">{selectedWord.partOfSpeech}</p>
