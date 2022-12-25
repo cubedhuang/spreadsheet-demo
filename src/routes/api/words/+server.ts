@@ -68,6 +68,8 @@ function cleanUpRawWords(rawWords: RawWord[]) {
 	});
 }
 
+export const prerender = true;
+
 export const GET = (async () => {
 	return json(cleanUpRawWords(buildRawWordsFromRows(await fetchRows())));
 }) satisfies RequestHandler;
