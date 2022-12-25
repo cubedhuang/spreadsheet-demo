@@ -57,12 +57,13 @@ function buildRawWordsFromRows(rows: string[][]) {
 
 function cleanUpRawWords(rawWords: RawWord[]) {
 	return rawWords.map(word => {
+		const etymology = word.etymology.startsWith(word.language)
+			? word.etymology.slice(word.language.length).trim()
+			: word.etymology;
+
 		return {
 			...word,
-			etymology: word.etymology.replace(
-				new RegExp(`^${word.language}\\s*`),
-				''
-			),
+			etymology,
 			indoeuropeanLang: word.indoeuropeanLang === 'Yes'
 		} as Word;
 	});
